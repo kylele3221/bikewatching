@@ -14,6 +14,12 @@ const map = new mapboxgl.Map({
 map.addControl(new mapboxgl.NavigationControl(), 'top-right');
 
 map.on('load', async () => {
+  const laneStyle = {
+    'line-color': '#32D400',
+    'line-width': 5,
+    'line-opacity': 0.6
+  };
+
   map.addSource('boston_route', {
     type: 'geojson',
     data: 'https://bostonopendata-boston.opendata.arcgis.com/datasets/boston::existing-bike-network-2022.geojson'
@@ -23,11 +29,7 @@ map.on('load', async () => {
     id: 'bike-lanes-boston',
     type: 'line',
     source: 'boston_route',
-    paint: {
-      'line-color': '#32D400',
-      'line-width': 5,
-      'line-opacity': 0.6
-    }
+    paint: laneStyle
   });
 
   map.addSource('cambridge_route', {
@@ -38,11 +40,7 @@ map.on('load', async () => {
   map.addLayer({
     id: 'bike-lanes-cambridge',
     type: 'line',
-    source: 'cambridge-route',
-    paint: {
-      'line-color': '#32D400',
-      'line-width': 5,
-      'line-opacity': 0.6
-    }
+    source: 'cambridge_route',
+    paint: laneStyle
   });
 });
