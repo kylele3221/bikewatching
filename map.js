@@ -20,7 +20,7 @@ map.on('load', async () => {
   });
 
   map.addLayer({
-    id: 'bike-lanes',
+    id: 'bike-lanes-boston',
     type: 'line',
     source: 'boston_route',
     paint: {
@@ -30,4 +30,19 @@ map.on('load', async () => {
     }
   });
 
+  map.addSource('cambridge_route', {
+    type: 'geojson',
+    data: 'https://cambridgegis.github.io/gisdata/RECREATION_BikeFacilities.geojson'
+  });
+
+  map.addLayer({
+    id: 'bike-lanes-cambridge',
+    type: 'line',
+    source: 'cambridge-route',
+    paint: {
+      'line-color': '#32D400',
+      'line-width': 5,
+      'line-opacity': 0.6
+    }
+  });
 });
