@@ -32,7 +32,7 @@ map.on('load', async () => {
 
   map.addSource('cambridge_route', {
     type: 'geojson',
-    data: 'https://cambridgegis.github.io/gisdata/RECREATION_BikeFacilities.geojson'
+    data: 'https://raw.githubusercontent.com/cambridgegis/cambridgegis_data/main/Recreation/Bike_Facilities/RECREATION_BikeFacilities.geojson'
   });
 
   map.addLayer({
