@@ -24,3 +24,6 @@ body {
   height: 100%;
   pointer-events: none;
 }
+
+#map svg { background: yellow; opacity: 50%; }
+
