@@ -14,6 +14,15 @@ const map = new mapboxgl.Map({
 
 map.addControl(new mapboxgl.NavigationControl(), 'top-right');
 
+const svg = d3.select('#map').select('svg');
+
+function getCoords(station) {
+  const lon = +(station.Long ?? station.lon ?? station.longitude);
+  const lat = +(station.Lat ?? station.lat ?? station.latitude);
+  const p = map.project(new mapboxgl.LngLat(lon, lat));
+  return { cx: p.x, cy: p.y };
+}
+
 map.on('load', async () => {
   const laneStyle = {
     'line-color': '#32D400',
@@ -48,10 +57,31 @@ map.on('load', async () => {
   try {
     const jsonurl = 'https://dsc106.com/labs/lab07/data/bluebikes-stations.json';
     const jsonData = await d3.json(jsonurl);
-    console.log('Loaded JSON Data:', jsonData);
     const stations = jsonData.data.stations;
-    console.log('Stations Array:', stations);
-  } catch (error) {
-    console.error('Error loading JSON:', error);
+
+    const circles = svg
+      .selectAll('circle')
+      .data(stations)
+      .enter()
+      .append('circle')
+      .attr('r', 5)
+      .attr('fill', 'steelblue')
+      .attr('stroke', 'white')
+      .attr('stroke-width', 1)
+      .attr('opacity', 0.8);
+
+    function updatePositions() {
+      circles
+        .attr('cx', d => getCoords(d).cx)
+        .attr('cy', d => getCoords(d).cy);
+    }
+
+    updatePositions();
+    map.on('move', updatePositions);
+    map.on('zoom', updatePositions);
+    map.on('resize', updatePositions);
+    map.on('moveend', updatePositions);
+  } catch (e) {
+    console.error(e);
   }
 });
