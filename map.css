@@ -1,21 +1,48 @@
 html,
 body {
   margin: 0;
-  padding: 5;
+  padding: 0;
   height: 100%;
   width: 100%;
+  display: block;
+  font-family: system-ui, sans-serif;
+}
+
+header {
   display: flex;
-  justify-content: center; /* Center horizontally */
-  align-items: center;     /* Center vertically */
+  gap: 1em;
+  align-items: baseline;
+  padding: 8px 12px;
+  background: #f8f8f8;
+  border-bottom: 1px solid #ddd;
+}
+
+.time-filter {
+  margin-left: auto;
+  display: flex;
+  align-items: center;
+  gap: 0.5em;
+}
+
+.time-filter input[type="range"] {
+  width: 280px;
+}
+
+#timeValue,
+#anytime {
+  display: block;
+}
+
+#anytime {
+  color: #666;
+  font-style: italic;
 }
 
 #map {
-  width: 100%;  /* Full width */
-  height: 100%; /* Full height */
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Optional shadow */
-  border-radius: 8px; /* Optional rounded corners */
+  position: relative;
+  width: 100%;
+  height: calc(100vh - 56px);
 }
-
 
 #map svg {
   position: absolute;
@@ -24,9 +51,7 @@ body {
   height: 100%;
   pointer-events: none;
 }
+
 #map circle {
   pointer-events: auto;
 }
-
-
-
