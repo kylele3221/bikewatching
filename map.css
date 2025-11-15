@@ -56,9 +56,39 @@ header {
   pointer-events: auto;
 }
 
-#map circle {
+:is(#map circle, .legend > div) {
   --color-departures: steelblue;
   --color-arrivals: darkorange;
-  fill: color-mix(in oklch, var(--color-departures) calc(100% * var(--departure-ratio, 0.5)), var(--color-arrivals));
+  --color: color-mix(in oklch, var(--color-departures) calc(100% * var(--departure-ratio, 0.5)), var(--color-arrivals));
 }
 
+#map circle {
+  fill: var(--color);
+}
+
+.legend {
+  display: flex;
+  gap: 14px;
+  align-items: center;
+  padding: 8px 12px;
+  margin-block: 8px 12px;
+}
+
+.legend > div {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 12px;
+  border-radius: 8px;
+  background: #f4f4f4;
+}
+
+.legend > div::before {
+  content: "";
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  background: var(--color);
+  border: 1px solid #fff;
+  box-shadow: 0 0 0 1px rgba(0,0,0,.1);
+}
