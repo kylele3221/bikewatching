@@ -61,6 +61,7 @@ let stations = [];
 let trips = [];
 let circles;
 let radiusScale;
+const stationFlow = d3.scaleQuantize().domain([0, 1]).range([0, 0.5, 1]);
 
 map.on('load', async () => {
   const laneStyle = {
@@ -114,12 +115,12 @@ map.on('load', async () => {
     .data(stations, d => d.short_name ?? d.Number)
     .enter()
     .append('circle')
-    .attr('fill', 'steelblue')
     .attr('stroke', 'white')
     .attr('stroke-width', 1)
     .attr('fill-opacity', 0.6)
     .attr('opacity', 0.9)
     .attr('r', d => radiusScale(d.totalTraffic))
+    .style('--departure-ratio', d => stationFlow((d.totalTraffic ? d.departures / d.totalTraffic : 0)))
     .each(function (d) {
       d3.select(this)
         .append('title')
@@ -141,12 +142,12 @@ map.on('load', async () => {
     circles
       .data(filteredStations, d => d.short_name ?? d.Number)
       .join('circle')
-      .attr('fill', 'steelblue')
       .attr('stroke', 'white')
       .attr('stroke-width', 1)
       .attr('fill-opacity', 0.6)
       .attr('opacity', 0.9)
       .attr('r', d => radiusScale(d.totalTraffic))
+      .style('--departure-ratio', d => stationFlow((d.totalTraffic ? d.departures / d.totalTraffic : 0)))
       .each(function (d) {
         const t = d3.select(this).select('title');
         (t.empty() ? d3.select(this).append('title') : t)
