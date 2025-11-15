@@ -54,37 +54,9 @@ map.on('load', async () => {
     paint: laneStyle
   });
 
-  let stations;
-  try {
-    const jsonurl = 'https://dsc106.com/labs/lab07/data/bluebikes-stations.json';
-    const jsonData = await d3.json(jsonurl);
-    stations = jsonData.data.stations;
-
-    const circles = svg
-      .selectAll('circle')
-      .data(stations)
-      .enter()
-      .append('circle')
-      .attr('r', 5)
-      .attr('fill', 'steelblue')
-      .attr('stroke', 'white')
-      .attr('stroke-width', 1)
-      .attr('opacity', 0.8);
-
-    function updatePositions() {
-      circles
-        .attr('cx', d => getCoords(d).cx)
-        .attr('cy', d => getCoords(d).cy);
-    }
-
-    updatePositions();
-    map.on('move', updatePositions);
-    map.on('zoom', updatePositions);
-    map.on('resize', updatePositions);
-    map.on('moveend', updatePositions);
-  } catch (e) {
-    console.error(e);
-  }
+  const jsonurl = 'https://dsc106.com/labs/lab07/data/bluebikes-stations.json';
+  const jsonData = await d3.json(jsonurl);
+  const stations = jsonData.data.stations;
 
   const trips = await d3.csv('https://dsc106.com/labs/lab07/data/bluebikes-traffic-2024-03.csv', d => ({
     ride_id: d.ride_id,
@@ -108,5 +80,34 @@ map.on('load', async () => {
     s.totalTraffic = a + d;
   });
 
-  console.log('stations with traffic fields:', stations.slice(0, 5));
+  const radiusScale = d3
+    .scaleSqrt()
+    .domain([0, d3.max(stations, d => d.totalTraffic)])
+    .range([0, 25]);
+
+  const circles = svg
+    .selectAll('circle')
+    .data(stations)
+    .enter()
+    .append('circle')
+    .attr('fill', 'steelblue')
+    .attr('stroke', 'white')
+    .attr('stroke-width', 1)
+    .attr('fill-opacity', 0.6)
+    .attr('opacity', 0.9)
+    .attr('r', d => radiusScale(d.totalTraffic));
+
+  function updatePositions() {
+    circles
+      .attr('cx', d => getCoords(d).cx)
+      .attr('cy', d => getCoords(d).cy);
+  }
+
+  updatePositions();
+  map.on('move', updatePositions);
+  map.on('zoom', updatePositions);
+  map.on('resize', updatePositions);
+  map.on('moveend', updatePositions);
+
+  console.log('Radius scale domain:', radiusScale.domain());
 });
