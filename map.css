@@ -55,3 +55,10 @@ header {
 #map circle {
   pointer-events: auto;
 }
+
+#map circle {
+  --color-departures: steelblue;
+  --color-arrivals: darkorange;
+  fill: color-mix(in oklch, var(--color-departures) calc(100% * var(--departure-ratio, 0.5)), var(--color-arrivals));
+}
+
