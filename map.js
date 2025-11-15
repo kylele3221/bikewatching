@@ -54,10 +54,11 @@ map.on('load', async () => {
     paint: laneStyle
   });
 
+  let stations;
   try {
     const jsonurl = 'https://dsc106.com/labs/lab07/data/bluebikes-stations.json';
     const jsonData = await d3.json(jsonurl);
-    const stations = jsonData.data.stations;
+    stations = jsonData.data.stations;
 
     const circles = svg
       .selectAll('circle')
@@ -95,6 +96,17 @@ map.on('load', async () => {
     is_member: +d.is_member
   }));
 
-  console.log('Trips loaded:', trips.length);
-  console.log('Sample trip:', trips[0]);
+  const departures = d3.rollup(trips, v => v.length, d => d.start_station_id);
+  const arrivals = d3.rollup(trips, v => v.length, d => d.end_station_id);
+
+  stations.forEach(s => {
+    const id = s.short_name ?? s.Number ?? s.number ?? s.id;
+    const a = arrivals.get(id) ?? 0;
+    const d = departures.get(id) ?? 0;
+    s.arrivals = a;
+    s.departures = d;
+    s.totalTraffic = a + d;
+  });
+
+  console.log('stations with traffic fields:', stations.slice(0, 5));
 });
