@@ -84,4 +84,16 @@ map.on('load', async () => {
   } catch (e) {
     console.error(e);
   }
-});
+
+  const trips = await d3.csv('https://dsc106.com/labs/lab07/data/bluebikes-traffic-2024-03.csv', d => ({
+  ride_id: d.ride_id,
+  bike_type: d.bike_type,
+  started_at: new Date(d.started_at),
+  ended_at: new Date(d.ended_at),
+  start_station_id: d.start_station_id,
+  end_station_id: d.end_station_id,
+  is_member: +d.is_member
+}));
+console.log('Trips loaded:', trips.length);
+console.log('Sample trip:', trips[0]);
+
