@@ -95,7 +95,12 @@ map.on('load', async () => {
     .attr('stroke-width', 1)
     .attr('fill-opacity', 0.6)
     .attr('opacity', 0.9)
-    .attr('r', d => radiusScale(d.totalTraffic));
+    .attr('r', d => radiusScale(d.totalTraffic))
+    .each(function (d) {
+      d3.select(this)
+        .append('title')
+        .text(`${d.totalTraffic} trips (${d.departures} departures, ${d.arrivals} arrivals)`);
+    });
 
   function updatePositions() {
     circles
@@ -108,6 +113,4 @@ map.on('load', async () => {
   map.on('zoom', updatePositions);
   map.on('resize', updatePositions);
   map.on('moveend', updatePositions);
-
-  console.log('Radius scale domain:', radiusScale.domain());
 });
